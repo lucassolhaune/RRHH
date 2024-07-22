@@ -3,8 +3,10 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {Box, Button, Snackbar} from "@mui/material";
 import {Link, useSearchParams} from "react-router-dom";
 import DeleteEmployeeConfirmation from "./deleteEmployeeConfirmation";
+import {Employee} from "../types/Employee";
+import type {GridColDef} from "@mui/x-data-grid/models/colDef/gridColDef";
 
-const columns = [
+const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
     { field: 'firstName', headerName: 'Nombre', width: 130 },
     { field: 'lastName', headerName: 'Apellido', width: 130 },
@@ -14,16 +16,25 @@ const columns = [
     { field: 'salary', headerName: 'Salario', type: 'number', width: 130, valueGetter: (value, row) => value ? `$ ${value}` : 'No informado'},
 ];
 
-const ViewEmployees = ({dataModel, setDataModel}) => {
+type ViewEmployeesProps = {
+  dataModel: Employee[];
+  setDataModel: (employee: Employee) => void;
+}
+
+const ViewEmployees = ({dataModel, setDataModel}: ViewEmployeesProps) => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteAllEmployeeConfirmationOpen, setDeleteAllEmployeeConfirmationOpen] = useState(false);
   const [deleteEmployeeConfirmationOpen, setDeleteEmployeeConfirmationOpen] = useState(false);
 
   useEffect(() => {
-    if (urlSearchParams.has('success')) {
-      setSnackbarOpen(true);
+    if (urlSearchParams.has('createSuccess')) {
+      setSnackbarMessage('Empleado editado correctamente');
+      setUrlSearchParams('');
+    }
+    if (urlSearchParams.has('editSuccess')) {
+      setSnackbarMessage('Empleado creado correctamente');
       setUrlSearchParams('');
     }
   }, [urlSearchParams, setUrlSearchParams]);
@@ -68,7 +79,7 @@ const ViewEmployees = ({dataModel, setDataModel}) => {
           to={`/edit/${selectedRows[0]}`}
           variant="contained"
         >
-          Edit Empleado
+          Editar Empleado
         </Button>
         <Button
           disabled={!selectedRows.length}
@@ -84,6 +95,7 @@ const ViewEmployees = ({dataModel, setDataModel}) => {
           Eliminar Todos los Empleados
         </Button>
       </Box>
+
       <DataGrid
         autoHeight
         rows={dataModel}
@@ -104,11 +116,12 @@ const ViewEmployees = ({dataModel, setDataModel}) => {
         }}
         localeText={{ noRowsLabel: "No hay RRHH disponibles" }}
       />
+
       <Snackbar
-        open={snackbarOpen}
+        open={!!snackbarMessage}
         autoHideDuration={3000}
-        message="Empleado creado"
-        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        onClose={() => setSnackbarMessage(false)}
       />
     </>
   )

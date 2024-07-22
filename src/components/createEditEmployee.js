@@ -1,8 +1,14 @@
 import {Alert, Box, Button, TextField, Typography} from '@mui/material';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {useState} from "react";
+import {Employee} from "../types/Employee";
 
-const CreateEditEmployee = ({dataModel, onSave}) => {
+type CreateEditEmployeeProps = {
+  dataModel?: Employee[];
+  onSave: (employee: Employee) => void;
+}
+
+const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -130,7 +136,7 @@ const CreateEditEmployee = ({dataModel, onSave}) => {
                   onSave(employee);
 
                   // Volver a ViewEmployees avisando que el usuario se creó
-                  navigate('/?success')
+                  navigate(!!id ? '/?createSuccess' : '/?editSuccess');
                 }
               }} variant={'contained'}>
                 Guardar

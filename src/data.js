@@ -1,4 +1,6 @@
-export const data = [
+import {Employee} from "./types/Employee";
+
+export const data: Employee[] = [
   {
     id: 1,
     firstName: 'John',

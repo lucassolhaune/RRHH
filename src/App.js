@@ -4,10 +4,11 @@ import CreateEditEmployee from './components/createEditEmployee';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {useState} from "react";
 import {data} from './data'
+import {Employee} from "./types/Employee";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
   },
 });
 
@@ -18,7 +19,7 @@ const App = () => {
    * Funcion para guardar un nuevo empleado en el DataModel.
    * @param employee
    */
-  const onSave = (employee) => {
+  const onSave = (employee: Employee) => {
     const newEmployeeId = dataModel.length ? Math.max(...dataModel.map(employee => Number(employee.id))) + 1 : 1
 
     setDataModel((prevState) => ([
@@ -28,6 +29,19 @@ const App = () => {
         id: newEmployeeId
       }
     ]))
+  };
+
+  const onEdit = (employee: Employee) => {
+    dataModel.forEach((dmEmployee) => {
+      if (dmEmployee.id === employee.id) {
+        dmEmployee.firstName = employee.firstName;
+        dmEmployee.lastName = employee.lastName;
+        dmEmployee.email = employee.email;
+        dmEmployee.phoneNumber = employee.phoneNumber;
+        dmEmployee.hireDate = employee.hireDate;
+        dmEmployee.salary = employee.salary;
+      }
+    })
   };
 
   return (
@@ -47,7 +61,7 @@ const App = () => {
             />
             <Route
               path='/edit/:id'
-              element={<CreateEditEmployee dataModel={dataModel} onSave={onSave}/>}
+              element={<CreateEditEmployee dataModel={dataModel} onSave={onEdit}/>}
             />
             <Route
               path="*"
