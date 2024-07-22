@@ -8,7 +8,7 @@ import {Employee} from "./types/Employee";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
   },
 });
 
@@ -31,6 +31,10 @@ const App = () => {
     ]))
   };
 
+  /**
+   * onEdit, busca un empleado específico por su id y actualiza sus datos.
+   *
+   */
   const onEdit = (employee: Employee) => {
     dataModel.forEach((dmEmployee) => {
       if (dmEmployee.id === employee.id) {

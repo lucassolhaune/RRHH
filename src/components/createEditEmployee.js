@@ -4,26 +4,30 @@ import {useState} from "react";
 import {Employee} from "../types/Employee";
 
 type CreateEditEmployeeProps = {
-  dataModel?: Employee[];
-  onSave: (employee: Employee) => void;
+  dataModel?: Employee[]; //Array que contiene objetos de tipo Employee.
+  onSave: (employee: Employee) => void; //Función que recibe un objeto employee y no devuelve nada.
 }
 
 const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  /**
+   * "getEmployeeIfExists" es una función que verifica si se está editando un empleado existente o si está creando uno nuevo,
+   * basandose en el "ID" y la existencia de dicho empleado en "dataModel"
+   */
   const getEmployeeIfExists = () => {
     if (!!id) {
       const employeeFoundAsArray = dataModel.filter((employee) => employee.id === Number(id));
       if (employeeFoundAsArray.length) {
-        // Edit scenario with valid ID
+        // Editar escenario con ID válido.
         return dataModel[0];
       } else {
-        // Edit scenario with invalid ID
+        // Editar escenario con ID inválido.
         return null;
       }
     } else {
-      // Create scenario
+      // Crear escenario.
       return {}
     }
   }
