@@ -1,39 +1,22 @@
 import {Alert, Box, Button, TextField, Typography} from '@mui/material';
-import {Link, useNavigate, useParams} from 'react-router-dom';
-import {useState} from "react";
-import {Employee} from "../types/Employee";
+import {Link} from 'react-router-dom';
+import type {Employee} from "../types/Employee";
 
 type CreateEditEmployeeProps = {
-  dataModel?: Employee[]; //Array que contiene objetos de tipo Employee.
-  onSave: (employee: Employee) => void; //Función que recibe un objeto employee y no devuelve nada.
+  title: string;
+  employee: Employee;
+  setEmployee: (employee: Employee) => void;
+  readyForErrors: boolean;
+  onSave: () => void;
 }
 
-const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  /**
-   * "getEmployeeIfExists" es una función que verifica si se está editando un empleado existente o si está creando uno nuevo,
-   * basandose en el "ID" y la existencia de dicho empleado en "dataModel"
-   */
-  const getEmployeeIfExists = () => {
-    if (!!id) {
-      const employeeFoundAsArray = dataModel.filter((employee) => employee.id === Number(id));
-      if (employeeFoundAsArray.length) {
-        // Editar escenario con ID válido.
-        return dataModel[0];
-      } else {
-        // Editar escenario con ID inválido.
-        return null;
-      }
-    } else {
-      // Crear escenario.
-      return {}
-    }
-  }
-
-  const [employee, setEmployee] = useState(getEmployeeIfExists());
-  const [readyForErrors, setReadyForErrors] = useState(!!id);
+const EmployeeForm = ({
+  title,
+  employee,
+  setEmployee,
+  readyForErrors,
+  onSave
+}: CreateEditEmployeeProps) => {
 
   const commonTextFieldProps = {
     fullWidth: true,
@@ -51,10 +34,10 @@ const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
         Pantalla Inicial
       </Button>
 
-      <Typography sx={{ my: 4 }} variant='h5'>{!!id ? 'Editar Empleado' : 'Crear Empleado'}</Typography>
+      <Typography sx={{ my: 4 }} variant='h5'>{title}</Typography>
 
       {
-        employee === null
+        !employee
           ? (
             <Alert severity="error">El empleado no existe</Alert>
           )
@@ -131,18 +114,7 @@ const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
               display="flex"
               gap={4}
             >
-              <Button onClick={() => {
-                setReadyForErrors(true);
-
-                // Validar datos
-                if (employee.firstName && employee.lastName && employee.email && employee.phoneNumber && employee.hireDate) {
-                  // Guardar
-                  onSave(employee);
-
-                  // Volver a ViewEmployees avisando que el usuario se creó
-                  navigate(!!id ? '/?createSuccess' : '/?editSuccess');
-                }
-              }} variant={'contained'}>
+              <Button onClick={onSave} variant={'contained'}>
                 Guardar
               </Button>
 
@@ -161,4 +133,4 @@ const CreateEditEmployee = ({dataModel, onSave}: CreateEditEmployeeProps) => {
   )
 }
 
-export default CreateEditEmployee;
+export default EmployeeForm;

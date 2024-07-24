@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from 'react-redux'
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {Box, Button, Snackbar} from "@mui/material";
 import {Link, useSearchParams} from "react-router-dom";
 import DeleteEmployeeConfirmation from "./deleteEmployeeConfirmation";
-import {Employee} from "../types/Employee";
 import type {GridColDef} from "@mui/x-data-grid/models/colDef/gridColDef";
+import {remove, removeAll, selectEmployees} from "../app/employeesReducer";
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -16,33 +17,16 @@ const columns: GridColDef[] = [
     { field: 'salary', headerName: 'Salario', type: 'number', width: 130, valueGetter: (value, row) => value ? `$ ${value}` : 'No informado'},
 ];
 
-type ViewEmployeesProps = {
-  dataModel: Employee[];
-  setDataModel: (employee: Employee) => void;
-}
+const ViewEmployees = () => {
+  const dispatch = useDispatch();
+  const dataModel = useSelector(selectEmployees);
 
-const ViewEmployees = ({dataModel, setDataModel}: ViewEmployeesProps) => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const [snackbarMessage, setSnackbarMessage] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteAllEmployeeConfirmationOpen, setDeleteAllEmployeeConfirmationOpen] = useState(false);
   const [deleteEmployeeConfirmationOpen, setDeleteEmployeeConfirmationOpen] = useState(false);
 
-  /**
-   * useEffect
-   *
-   * El primer if verifica si el objeto "urlSearchParams" contiene el parámetro "createSuccess";
-   * Si es verdadero llama al "setSnackbarMessage", actualiza el estado para mostrar un mensaje que el empleado se
-   * actualizó correctamente.
-   * Luego llama a "setUrlSearchParams('')", que va a limpiar o
-   * actualizar el objeto "urlSearchParams" después de finalizar con éxito la operación.
-   *
-   * El segundo if  verifica si el objeto "urlSearchParams" contiene el parámetro "editSuccess";
-   * Si es verdadero, llama a "setSnackbarMessage('Empleado creado correctamente')",
-   * esto actualizará el estado para mostrar un mensaje de confirmación o notificación en la interfaz de usuario.
-   * Luego se llama a "setUrlSearchParams('')" que va a limpiar o
-   * actualizar el objeto "urlSearchParams" despues de finalizar con éxito la operación,
-   */
   useEffect(() => {
     if (urlSearchParams.has('createSuccess')) {
       setSnackbarMessage('Empleado editado correctamente');
@@ -65,18 +49,13 @@ const ViewEmployees = ({dataModel, setDataModel}: ViewEmployeesProps) => {
         onConfirm={() => {
           // Eliminar registro(s)
           if (deleteAllEmployeeConfirmationOpen) {
-            setDataModel([]);
+            dispatch(removeAll())
           }
-          /**
-          * Este fragrmento de código elimina empleados de "dataModel" basandose en los "ids" almacenados en "selectedRows"
-          * solo si "deleteEmployeeConfirmationOpen" es verdadero.
-          */
+
           if (deleteEmployeeConfirmationOpen) {
-            const filteredEmployees = dataModel.filter(employee => !selectedRows.includes(employee.id));
-            setDataModel(filteredEmployees);
+            dispatch(remove(selectedRows))
           }
         }}
-        //Si el modal es "true" cualquier de los dos estados se van a mostrar.
         open={deleteAllEmployeeConfirmationOpen || deleteEmployeeConfirmationOpen}
       />
 

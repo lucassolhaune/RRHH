@@ -1,10 +1,8 @@
 import ViewEmployees from './components/viewEmployees';
 import {Container, createTheme, CssBaseline, ThemeProvider, Typography} from '@mui/material';
-import CreateEditEmployee from './components/createEditEmployee';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
-import {useState} from "react";
-import {data} from './data'
-import {Employee} from "./types/Employee";
+import CreateEmployee from "./components/createEmployee";
+import EditEmployee from "./components/editEmployee";
 
 const darkTheme = createTheme({
   palette: {
@@ -13,41 +11,6 @@ const darkTheme = createTheme({
 });
 
 const App = () => {
-  let [dataModel, setDataModel] = useState(data);
-
-  /**
-   * Funcion para guardar un nuevo empleado en el DataModel.
-   * @param employee
-   */
-  const onSave = (employee: Employee) => {
-    const newEmployeeId = dataModel.length ? Math.max(...dataModel.map(employee => Number(employee.id))) + 1 : 1
-
-    setDataModel((prevState) => ([
-      ...prevState,
-      {
-        ...employee,
-        id: newEmployeeId
-      }
-    ]))
-  };
-
-  /**
-   * onEdit, busca un empleado específico por su id y actualiza sus datos.
-   *
-   */
-  const onEdit = (employee: Employee) => {
-    dataModel.forEach((dmEmployee) => {
-      if (dmEmployee.id === employee.id) {
-        dmEmployee.firstName = employee.firstName;
-        dmEmployee.lastName = employee.lastName;
-        dmEmployee.email = employee.email;
-        dmEmployee.phoneNumber = employee.phoneNumber;
-        dmEmployee.hireDate = employee.hireDate;
-        dmEmployee.salary = employee.salary;
-      }
-    })
-  };
-
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
@@ -57,15 +20,15 @@ const App = () => {
           <Routes>
             <Route
               path='/'
-              element={<ViewEmployees dataModel={dataModel} setDataModel={setDataModel}/>}
+              element={<ViewEmployees />}
             />
             <Route
               path='/create'
-              element={<CreateEditEmployee onSave={onSave}/>}
+              element={<CreateEmployee />}
             />
             <Route
               path='/edit/:id'
-              element={<CreateEditEmployee dataModel={dataModel} onSave={onEdit}/>}
+              element={<EditEmployee />}
             />
             <Route
               path="*"
