@@ -1,5 +1,5 @@
 import {Employee} from "./types/Employee";
-
+//Data de todos los empleados
 export const data: Employee[] = [
   {
     id: 1,

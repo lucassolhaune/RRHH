@@ -15,21 +15,28 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
       <Container maxWidth='lg'>
+        {/* Encabezado principal */}
         <Typography sx={{my: 4}} variant='h3'>Gestión de RRHH</Typography>
+        {/* Configura el enrutador */}
         <BrowserRouter>
+          {/* Definición de rutas */}
           <Routes>
+            {/* Componente para la ruta raíz */}
             <Route
               path='/'
               element={<ViewEmployees />}
             />
+            {/* Componente para la ruta de creación de empleado */}
             <Route
               path='/create'
               element={<CreateEmployee />}
             />
+            {/* Componente para la ruta de edición de empleado */}
             <Route
               path='/edit/:id'
               element={<EditEmployee />}
             />
+            {/* Redirección de rutas no encontradas */}
             <Route
               path="*"
               element={<Navigate to="/" replace />}

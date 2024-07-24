@@ -3,13 +3,14 @@ import {Link} from 'react-router-dom';
 import type {Employee} from "../types/Employee";
 
 type CreateEditEmployeeProps = {
-  title: string;
-  employee: Employee;
-  setEmployee: (employee: Employee) => void;
-  readyForErrors: boolean;
-  onSave: () => void;
+  title: string; //titulo del form.
+  employee: Employee;  // Datos del empleado.
+  setEmployee: (employee: Employee) => void; // Función para actualizar los datos del empleado.
+  readyForErrors: boolean; // Indicador de si el formulario está listo para mostrar errores.
+  onSave: () => void; // Función que se ejecuta al guardar el formulario.
 }
 
+// Componente funcional EmployeeForm que utiliza las propiedades definidas en CreateEditEmployeeProps.
 const EmployeeForm = ({
   title,
   employee,
@@ -18,6 +19,7 @@ const EmployeeForm = ({
   onSave
 }: CreateEditEmployeeProps) => {
 
+  // Propiedades comunes para los TextField
   const commonTextFieldProps = {
     fullWidth: true,
     required: true,
@@ -26,6 +28,7 @@ const EmployeeForm = ({
 
   return (
     <>
+      {/* Botón para regresar a la pantalla inicial. */}
       <Button
         component={Link}
         to="/"
@@ -34,15 +37,19 @@ const EmployeeForm = ({
         Pantalla Inicial
       </Button>
 
+      {/* Título del formulario (Crear Empleado / Editar Empleado). */}
       <Typography sx={{ my: 4 }} variant='h5'>{title}</Typography>
 
       {
+        // Renderizado condicional: muestra un mensaje de error si el empleado no existe.
         !employee
           ? (
             <Alert severity="error">El empleado no existe</Alert>
           )
           : (
           <>
+            {/* Campos de formulario para editar los datos del empleado */}
+              {/* TextField para el Nombre */}
             <TextField
               {...commonTextFieldProps}
               label="Nombre"
@@ -54,6 +61,7 @@ const EmployeeForm = ({
               error={readyForErrors && !employee.firstName}
             />
 
+            {/* TextField para el Apellido */}
             <TextField
               {...commonTextFieldProps}
               label="Apellido"
@@ -65,6 +73,7 @@ const EmployeeForm = ({
               error={readyForErrors && !employee.lastName}
             />
 
+            {/* TextField para el Correo Electrónico */}
             <TextField
               {...commonTextFieldProps}
               label="Correo Electrónico"
@@ -76,6 +85,7 @@ const EmployeeForm = ({
               error={readyForErrors && !employee.email}
             />
 
+            {/* TextField para el Teléfono */}
             <TextField
               {...commonTextFieldProps}
               label="Teléfono"
@@ -87,6 +97,7 @@ const EmployeeForm = ({
               error={readyForErrors && !employee.phoneNumber}
             />
 
+            {/* TextField para la Fecha de Contratación */}
             <TextField
               {...commonTextFieldProps}
               label="Fecha de Contratación"
@@ -98,6 +109,7 @@ const EmployeeForm = ({
               error={readyForErrors && !employee.hireDate}
             />
 
+            {/* TextField para el Salario */}
             <TextField
               {...commonTextFieldProps}
               required={false}
@@ -109,15 +121,18 @@ const EmployeeForm = ({
               value={employee.salary}
             />
 
+            {/* Botones de acción */}
             <Box
               my={4}
               display="flex"
               gap={4}
             >
+              {/* Botón para guardar los cambios */}
               <Button onClick={onSave} variant={'contained'}>
                 Guardar
               </Button>
 
+              {/* Botón para cancelar la acción y regresar a la pantalla inicial */}
               <Button
                 component={Link}
                 to="/"

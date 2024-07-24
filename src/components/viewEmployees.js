@@ -18,40 +18,42 @@ const columns: GridColDef[] = [
 ];
 
 const ViewEmployees = () => {
-  const dispatch = useDispatch();
-  const dataModel = useSelector(selectEmployees);
+  const dispatch = useDispatch(); // Función para enviar acciones al store de Redux
+  const dataModel = useSelector(selectEmployees); // Selecciona y extrae la lista de empleados del estado global de Redux mediante el selector selectEmployees.
 
-  const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const [snackbarMessage, setSnackbarMessage] = useState();
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [deleteAllEmployeeConfirmationOpen, setDeleteAllEmployeeConfirmationOpen] = useState(false);
-  const [deleteEmployeeConfirmationOpen, setDeleteEmployeeConfirmationOpen] = useState(false);
+  const [urlSearchParams, setUrlSearchParams] = useSearchParams(); // Maneja los parámetros de búsqueda de la URL.
+  const [snackbarMessage, setSnackbarMessage] = useState(); // Estado local para mostrar mensajes de Snackbar.
+  const [selectedRows, setSelectedRows] = useState([]); // Estado local para almacenar las filas seleccionadas en el DataGrid.
+  const [deleteAllEmployeeConfirmationOpen, setDeleteAllEmployeeConfirmationOpen] = useState(false); // Estado local para controlar la apertura del diálogo de confirmación para eliminar todos los empleados.
+  const [deleteEmployeeConfirmationOpen, setDeleteEmployeeConfirmationOpen] = useState(false); // Estado local para controlar la apertura del diálogo de confirmación para eliminar empleados seleccionados.
 
+
+    //Effect para manejar mensajes de Snackbar basado en los parámetros de búsqueda de la URL.
   useEffect(() => {
     if (urlSearchParams.has('createSuccess')) {
-      setSnackbarMessage('Empleado editado correctamente');
+      setSnackbarMessage('Empleado creado correctamente');
       setUrlSearchParams('');
     }
     if (urlSearchParams.has('editSuccess')) {
-      setSnackbarMessage('Empleado creado correctamente');
+      setSnackbarMessage('Empleado editado correctamente');
       setUrlSearchParams('');
     }
   }, [urlSearchParams, setUrlSearchParams]);
 
   return (
     <>
+        {/* Componente de confirmación para eliminar empleados */}
       <DeleteEmployeeConfirmation
         onClose={() => {
-          // Cerramos el dialogo
+          // Cerramos el dialogo de confirmación
           setDeleteEmployeeConfirmationOpen(false);
           setDeleteAllEmployeeConfirmationOpen(false);
         }}
         onConfirm={() => {
-          // Eliminar registro(s)
+          // Eliminar registro(s).
           if (deleteAllEmployeeConfirmationOpen) {
             dispatch(removeAll())
           }
-
           if (deleteEmployeeConfirmationOpen) {
             dispatch(remove(selectedRows))
           }
@@ -59,6 +61,7 @@ const ViewEmployees = () => {
         open={deleteAllEmployeeConfirmationOpen || deleteEmployeeConfirmationOpen}
       />
 
+        {/* Barra de herramientas con botones para acciones */}
       <Box
         my={4}
         display="flex"
@@ -94,6 +97,7 @@ const ViewEmployees = () => {
         </Button>
       </Box>
 
+        {/* DataGrid para mostrar los empleados */}
       <DataGrid
         autoHeight
         rows={dataModel}
@@ -115,6 +119,7 @@ const ViewEmployees = () => {
         localeText={{ noRowsLabel: "No hay RRHH disponibles" }}
       />
 
+        {/* Snackbar para mostrar mensajes temporales */}
       <Snackbar
         open={!!snackbarMessage}
         autoHideDuration={3000}
