@@ -20,7 +20,6 @@ const LoginPage = () => {
                 <Typography component="h1" variant="h5">
                     Iniciar sesión
                 </Typography>
-                <form onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -50,7 +49,6 @@ const LoginPage = () => {
                     >
                         Iniciar sesión
                     </Button>
-                </form>
             </Paper>
         </Container>
     );

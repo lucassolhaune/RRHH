@@ -3,6 +3,7 @@ import {Container, createTheme, CssBaseline, ThemeProvider, Typography} from '@m
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import CreateEmployee from "./components/createEmployee";
 import EditEmployee from "./components/editEmployee";
+import Login from "./components/login";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,10 +22,15 @@ const App = () => {
         <BrowserRouter>
           {/* Definición de rutas */}
           <Routes>
-            {/* Componente para la ruta raíz */}
+            {/* Componente para la ruta ViewEmployees  */}
             <Route
-              path='/'
+              path='/viewEmployees'
               element={<ViewEmployees />}
+            />
+            {/* Componente para la ruta Login */}
+            <Route
+                path='/'
+                element={<Login />}
             />
             {/* Componente para la ruta de creación de empleado */}
             <Route
